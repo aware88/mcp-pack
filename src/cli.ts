@@ -25,7 +25,7 @@ import { hydrateProcessEnvFromFile } from './utils/secrets.js';
 
 const DEFAULT_PROFILE = 'default';
 const WORKSPACE_ROOT = process.cwd();
-const DEFAULT_PACK_URL = 'https://raw.githubusercontent.com/YOUR-GITHUB-USERNAME/mcp-pack/main/pack.yaml';
+const DEFAULT_PACK_URL = 'https://raw.githubusercontent.com/aware88/mcp-pack/main/pack.yaml';
 const SNAPSHOT_VERSION = 1;
 
 interface ProfileSnapshot {

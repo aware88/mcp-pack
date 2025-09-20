@@ -18,7 +18,7 @@ If you received the project as a zip:
 
 If you are cloning from GitHub:
 ```bash
-git clone https://github.com/YOUR-GITHUB-USERNAME/mcp-pack.git
+git clone https://github.com/aware88/mcp-pack.git
 cd mcp-pack
 ```
 

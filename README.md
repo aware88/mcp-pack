@@ -34,7 +34,7 @@ Universal MCP server installer for people who just want their AI tools to work. 
 Local development install (recommended if you plan to contribute or test):
 
 ```bash
-git clone https://github.com/YOUR-GITHUB-USERNAME/mcp-pack.git
+git clone https://github.com/aware88/mcp-pack.git
 cd mcp-pack
 npm install
 npm run build

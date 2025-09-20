@@ -16,13 +16,13 @@
     "setup",
     "configuration"
   ],
-  "homepage": "https://github.com/your-username/mcp-pack",
+  "homepage": "https://github.com/aware88/mcp-pack",
   "bugs": {
-    "url": "https://github.com/your-username/mcp-pack/issues"
+    "url": "https://github.com/aware88/mcp-pack/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/mcp-pack.git"
+    "url": "git+https://github.com/aware88/mcp-pack.git"
   },
   "license": "MIT",
   "author": "Your Name <your.email@example.com>",
