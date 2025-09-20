@@ -1,0 +1,22 @@
+servers:
+  - id: "@modelcontextprotocol/server-filesystem"
+    runtime: npm
+    install: "npx -y @modelcontextprotocol/server-filesystem"
+    env: []
+    tags: [filesystem]
+
+  - id: "@modelcontextprotocol/server-brave-search"
+    runtime: npm
+    install: "npx -y @modelcontextprotocol/server-brave-search"
+    env:
+      - name: BRAVE_API_KEY
+        help: "Create a Brave Search API key and paste it"
+    tags: [web, search]
+
+  - id: "@modelcontextprotocol/server-github"
+    runtime: npm
+    install: "npm i -g @modelcontextprotocol/server-github"
+    env:
+      - name: GITHUB_PERSONAL_ACCESS_TOKEN
+        help: "Personal Access Token with repo scope"
+    tags: [dev, github]

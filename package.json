@@ -1,0 +1,81 @@
+{
+  "name": "mcp-pack",
+  "version": "0.1.0",
+  "description": "\ud83d\ude80 Universal MCP server setup for all AI clients - The missing universal installer with intelligent project detection, profile management, and cross-client compatibility",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "cursor",
+    "vscode",
+    "windsurf",
+    "warp",
+    "ai",
+    "tools",
+    "automation",
+    "setup",
+    "configuration"
+  ],
+  "homepage": "https://github.com/your-username/mcp-pack",
+  "bugs": {
+    "url": "https://github.com/your-username/mcp-pack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/mcp-pack.git"
+  },
+  "license": "MIT",
+  "author": "Your Name <your.email@example.com>",
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "bin": {
+    "mcp-pack": "dist/cli.mjs"
+  },
+  "files": [
+    "dist/**/*",
+    "packs.yaml",
+    "README.md",
+    "LICENSE",
+    "pack.yaml"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src",
+    "prepare": "npm run build",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "dependencies": {
+    "commander": "^11.1.0",
+    "enquirer": "^2.4.1",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "fs-extra": "^11.2.0",
+    "yaml": "^2.3.4",
+    "execa": "^8.0.1",
+    "zod": "^3.22.4",
+    "@iarna/toml": "^2.2.5",
+    "diff": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/fs-extra": "^11.0.4",
+    "typescript": "^5.3.3",
+    "tsup": "^8.0.1",
+    "vitest": "^1.2.0",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "prettier": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

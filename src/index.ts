@@ -1,0 +1,10 @@
+export { registry } from './registry.js';
+export type { ServerDefinition } from './registry.js';
+export { installServer } from './installers/index.js';
+export { ClaudeAdapter } from './adapters/claude.js';
+export { CursorAdapter } from './adapters/cursor.js';
+export { VSCodeAdapter } from './adapters/vscode.js';
+export { WindsurfAdapter } from './adapters/windsurf.js';
+export { CodexAdapter } from './adapters/codex.js';
+export type { ClientAdapter } from './adapters/types.js';
+export type { McpServerConfig, WriteConfigOptions, WriteConfigResult } from './types.js';
