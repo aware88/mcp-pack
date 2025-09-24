@@ -25,7 +25,7 @@
     "url": "git+https://github.com/aware88/mcp-pack.git"
   },
   "license": "MIT",
-  "author": "Your Name <your.email@example.com>",
+  "author": "Tim Mak <tim@neuroai.agency>",
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
   "bin": {
@@ -33,10 +33,12 @@
   },
   "files": [
     "dist/**/*",
+    "pack.yaml",
     "packs.yaml",
     "README.md",
+    "USER_GUIDE.md",
     "LICENSE",
-    "pack.yaml"
+    "docs/**/*"
   ],
   "scripts": {
     "build": "tsup",
