@@ -138,3 +138,409 @@ servers:
       - name: AIRTABLE_API_KEY
         help: "Personal access token (pat...) with schema/data scopes"
     tags: [airtable, database, productivity]
+
+  - id: "@modelcontextprotocol/server-everything"
+    runtime: npm
+    install: "npm install -g @modelcontextprotocol/server-everything"
+    command: "npx"
+    args:
+      - -y
+      - "@modelcontextprotocol/server-everything"
+    env: []
+    tags: [anthropic, reference, demo]
+
+  - id: "@modelcontextprotocol/server-memory"
+    runtime: npm
+    install: "npm install -g @modelcontextprotocol/server-memory"
+    command: "npx"
+    args:
+      - -y
+      - "@modelcontextprotocol/server-memory"
+    env: []
+    tags: [anthropic, memory]
+
+  - id: "@modelcontextprotocol/server-sequential-thinking"
+    runtime: npm
+    install: "npm install -g @modelcontextprotocol/server-sequential-thinking"
+    command: "npx"
+    args:
+      - -y
+      - "@modelcontextprotocol/server-sequential-thinking"
+    env: []
+    tags: [anthropic, reasoning]
+
+  - id: "mcp-server-time"
+    runtime: pip
+    install: "pip install --user --upgrade mcp-server-time"
+    command: "python"
+    args:
+      - -m
+      - mcp_server_time
+    env: []
+    tags: [time, utilities]
+
+  - id: "mcp-server-fetch"
+    runtime: pip
+    install: "pip install --user --upgrade mcp-server-fetch"
+    command: "python"
+    args:
+      - -m
+      - mcp_server_fetch
+    env: []
+    tags: [web, fetch]
+
+  - id: "mcp-server-git"
+    runtime: pip
+    install: "pip install --user --upgrade mcp-server-git"
+    command: "python"
+    args:
+      - -m
+      - mcp_server_git
+    env: []
+    tags: [git, devtools]
+
+  - id: "@brave/brave-search-mcp-server"
+    runtime: npm
+    install: "npm install -g @brave/brave-search-mcp-server"
+    command: "npx"
+    args:
+      - -y
+      - "@brave/brave-search-mcp-server"
+    env:
+      - name: BRAVE_API_KEY
+        help: "Create a Brave Search API key and paste it"
+    tags: [web, search]
+
+  - id: "@sekora/gitlab-mcp"
+    runtime: npm
+    install: "npm install -g @sekora/gitlab-mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@sekora/gitlab-mcp"
+    env:
+      - name: GITLAB_TOKEN
+        help: "Personal access token with api scope"
+      - name: GITLAB_URL
+        help: "Optional self-hosted base URL (default https://gitlab.com)"
+    tags: [gitlab, devops, project-management]
+
+  - id: "@mseep/linear-mcp"
+    runtime: npm
+    install: "npm install -g @mseep/linear-mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@mseep/linear-mcp"
+    env:
+      - name: LINEAR_API_KEY
+        help: "Linear API key from developer settings"
+    tags: [linear, project-management]
+
+  - id: "@answerai/confluence-mcp"
+    runtime: npm
+    install: "npm install -g @answerai/confluence-mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@answerai/confluence-mcp"
+    env:
+      - name: CONFLUENCE_BASE_URL
+        help: "Confluence site URL (e.g. https://your-domain.atlassian.net/wiki)"
+      - name: CONFLUENCE_USER_EMAIL
+        help: "Account email used with the API token"
+      - name: CONFLUENCE_API_TOKEN
+        help: "Atlassian API token with read access"
+    tags: [confluence, documentation]
+
+  - id: "@hubspot/mcp-server"
+    runtime: npm
+    install: "npm install -g @hubspot/mcp-server"
+    command: "npx"
+    args:
+      - -y
+      - "@hubspot/mcp-server"
+    env:
+      - name: PRIVATE_APP_ACCESS_TOKEN
+        help: "HubSpot private app access token"
+    tags: [hubspot, crm]
+
+  - id: "ghcr.io/sooperset/mcp-atlassian"
+    runtime: docker
+    install: "docker pull ghcr.io/sooperset/mcp-atlassian:latest"
+    command: "docker"
+    args:
+      - run
+      - --rm
+      - -i
+      - -e
+      - JIRA_URL
+      - -e
+      - JIRA_USERNAME
+      - -e
+      - JIRA_API_TOKEN
+      - -e
+      - CONFLUENCE_URL
+      - -e
+      - CONFLUENCE_USERNAME
+      - -e
+      - CONFLUENCE_API_TOKEN
+      - ghcr.io/sooperset/mcp-atlassian:latest
+      - --transport
+      - stdio
+    env:
+      - name: JIRA_URL
+        help: "Base URL for your Jira site"
+      - name: JIRA_USERNAME
+        help: "Email/username for Jira API token"
+      - name: JIRA_API_TOKEN
+        help: "Jira API token (cloud or PAT)"
+      - name: CONFLUENCE_URL
+        help: "Base URL for your Confluence site"
+      - name: CONFLUENCE_USERNAME
+        help: "Email/username for Confluence API token"
+      - name: CONFLUENCE_API_TOKEN
+        help: "Confluence API token (cloud or PAT)"
+    tags: [atlassian, jira, confluence, docker]
+
+  - id: "@google-cloud/cloud-run-mcp"
+    runtime: npm
+    install: "npm install -g @google-cloud/cloud-run-mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@google-cloud/cloud-run-mcp"
+    env:
+      - name: GOOGLE_CLOUD_PROJECT
+        help: "Optional default GCP project ID"
+      - name: GOOGLE_CLOUD_REGION
+        help: "Optional default Cloud Run region"
+      - name: DEFAULT_SERVICE_NAME
+        help: "Optional fallback service name"
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        help: "Path to service account JSON when running with docker or remote"
+    tags: [google-cloud, serverless, deployments]
+
+  - id: "@googlemaps/code-assist-mcp"
+    runtime: npm
+    install: "npm install -g @googlemaps/code-assist-mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@googlemaps/code-assist-mcp@latest"
+    env: []
+    tags: [google-maps, documentation]
+
+  - id: "@zencoderai/slack-mcp-server"
+    runtime: npm
+    install: "npm install -g @zencoderai/slack-mcp-server"
+    command: "npx"
+    args:
+      - -y
+      - "@zencoderai/slack-mcp-server"
+    env:
+      - name: SLACK_MCP_XOXP_TOKEN
+        help: "Slack user token (xoxp-...) or provide browser tokens"
+      - name: SLACK_MCP_XOXC_TOKEN
+        help: "Optional Slack xoxc browser token"
+      - name: SLACK_MCP_XOXD_TOKEN
+        help: "Optional Slack xoxd cookie token"
+    tags: [slack, communications]
+
+  - id: "aws-s3-mcp"
+    runtime: npm
+    install: "npm install -g aws-s3-mcp"
+    command: "npx"
+    args:
+      - -y
+      - aws-s3-mcp
+      - --stdio
+    env:
+      - name: AWS_REGION
+        help: "AWS region for S3 calls (e.g. us-east-1)"
+      - name: AWS_ACCESS_KEY_ID
+        help: "AWS access key ID with read permissions"
+      - name: AWS_SECRET_ACCESS_KEY
+        help: "AWS secret access key"
+      - name: S3_BUCKETS
+        help: "Optional comma separated allow-list of bucket names"
+    tags: [aws, s3, storage]
+
+  - id: "redis-mcp-server"
+    runtime: pip
+    install: "pip install --user --upgrade redis-mcp-server"
+    command: "redis-mcp-server"
+    args:
+      - --url
+      - redis://localhost:6379/0
+    env: []
+    tags: [redis, database]
+
+  - id: "github.com/grafana/mcp-grafana"
+    runtime: go
+    install: "go install github.com/grafana/mcp-grafana/cmd/mcp-grafana@latest"
+    command: "mcp-grafana"
+    args:
+      - -t
+      - stdio
+    env:
+      - name: GRAFANA_URL
+        help: "Grafana instance URL (e.g. https://grafana.example.com)"
+      - name: GRAFANA_SERVICE_ACCOUNT_TOKEN
+        help: "Service account token with API access"
+    tags: [grafana, observability]
+
+  - id: "gologin-mcp"
+    runtime: npm
+    install: "npm install -g gologin-mcp"
+    command: "npx"
+    args:
+      - -y
+      - gologin-mcp
+    env:
+      - name: API_TOKEN
+        help: "GoLogin API token"
+    tags: [gologin, browser-automation]
+
+  - id: "docker.gitea.com/gitea-mcp-server"
+    runtime: docker
+    install: "docker pull docker.gitea.com/gitea-mcp-server:latest"
+    command: "docker"
+    args:
+      - run
+      - --rm
+      - -i
+      - -e
+      - GITEA_ACCESS_TOKEN
+      - docker.gitea.com/gitea-mcp-server:latest
+      - -t
+      - stdio
+      - --host
+      - https://gitea.com
+    env:
+      - name: GITEA_ACCESS_TOKEN
+        help: "Gitea personal access token with API scope"
+    tags: [gitea, git, docker]
+
+  - id: "@gleanwork/local-mcp-server"
+    runtime: npm
+    install: "npm install -g @gleanwork/local-mcp-server"
+    command: "npx"
+    args:
+      - -y
+      - "@gleanwork/local-mcp-server"
+    env:
+      - name: GLEAN_INSTANCE
+        help: "Your Glean instance slug"
+      - name: GLEAN_API_TOKEN
+        help: "Glean API token with MCP access"
+    tags: [glean, search]
+
+  - id: "firebase-tools-mcp"
+    runtime: npm
+    install: "npm install -g firebase-tools"
+    command: "npx"
+    args:
+      - -y
+      - firebase-tools
+      - experimental:mcp
+      - --dir
+      - .
+    env: []
+    tags: [firebase, devtools]
+
+  - id: "@netlify/mcp"
+    runtime: npm
+    install: "npm install -g @netlify/mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@netlify/mcp"
+    env:
+      - name: NETLIFY_PERSONAL_ACCESS_TOKEN
+        help: "Optional Netlify PAT for scripted auth"
+    tags: [netlify, deployments]
+
+  - id: "@azure/mcp"
+    runtime: npm
+    install: "npm install -g @azure/mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@azure/mcp"
+      - server
+      - start
+    env:
+      - name: AZURE_TENANT_ID
+        help: "Azure AD tenant ID for service principal auth"
+      - name: AZURE_CLIENT_ID
+        help: "Azure AD application (client) ID"
+      - name: AZURE_CLIENT_SECRET
+        help: "Azure AD client secret"
+    tags: [azure, cloud]
+
+  - id: "globalping-remote"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://mcp.globalping.dev/mcp
+    env: []
+    tags: [networking, monitoring]
+
+  - id: "cloudflare-observability"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://observability.mcp.cloudflare.com/sse
+    env: []
+    tags: [cloudflare, observability, remote]
+
+  - id: "cloudflare-workers-bindings"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://bindings.mcp.cloudflare.com/sse
+    env: []
+    tags: [cloudflare, workers, remote]
+
+  - id: "cloudflare-browser-rendering"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://browser.mcp.cloudflare.com/sse
+    env: []
+    tags: [cloudflare, web, remote]
+
+  - id: "cloudflare-docs"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://docs.mcp.cloudflare.com/sse
+    env: []
+    tags: [cloudflare, documentation, remote]
+
+  - id: "cloudflare-radar"
+    runtime: npm
+    install: "npm install -g mcp-remote"
+    command: "npx"
+    args:
+      - -y
+      - mcp-remote
+      - https://radar.mcp.cloudflare.com/sse
+    env: []
+    tags: [cloudflare, analytics, remote]
