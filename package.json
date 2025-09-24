@@ -1,6 +1,6 @@
 {
   "name": "mcp-pack",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "\ud83d\ude80 Universal MCP server setup for all AI clients - The missing universal installer with intelligent project detection, profile management, and cross-client compatibility",
   "keywords": [
     "mcp",

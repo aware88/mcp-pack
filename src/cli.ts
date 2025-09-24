@@ -49,7 +49,7 @@ const adapters: Record<string, ClientAdapter> = {
 };
 
 const program = new Command();
-program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.0');
+program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.2');
 
 program
   .command('select')
