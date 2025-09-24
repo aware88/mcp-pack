@@ -1,5 +1,8 @@
 # MCP Pack
 
+[![npm version](https://img.shields.io/npm/v/mcp-pack.svg)](https://www.npmjs.com/package/mcp-pack)
+[![CI](https://github.com/aware88/mcp-pack/actions/workflows/ci.yml/badge.svg)](https://github.com/aware88/mcp-pack/actions/workflows/ci.yml)
+
 Universal MCP server installer for people who just want their AI tools to work. MCP Pack lets you pick a curated set of servers, install them with safe fallbacks, and update multiple client configuration files without ever touching JSON or TOML by hand.
 
 > **Status:** MVP ready. Supports Claude Desktop, Cursor, VS Code, Windsurf, Warp (Warp Drive export), and Codex config formats.
