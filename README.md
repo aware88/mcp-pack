@@ -136,7 +136,19 @@ Use `node dist/cli.mjs <command> --help` for command-specific flags. Replace `no
 
 ### Included servers
 
-The default `pack.yaml` includes npm servers only for a smooth first-run. Optional examples for pip/go/docker are provided commented out—uncomment as needed.
+| Server ID | Runtime | What it does | Secrets / notes |
+|-----------|---------|--------------|-----------------|
+| `@modelcontextprotocol/server-filesystem` | npm | Browse local files and folders | None |
+| `@modelcontextprotocol/server-brave-search` | npm | Brave Search web results | `BRAVE_API_KEY` (Brave Search API) |
+| `@modelcontextprotocol/server-github` | npm | GitHub repos, issues, pull requests | `GITHUB_PERSONAL_ACCESS_TOKEN` with repo scope |
+| `firecrawl-mcp` | npm | Firecrawl web crawling / scraping | `FIRECRAWL_API_KEY` (create at firecrawl.dev) |
+| `@supabase/mcp-server-supabase` | npm | Supabase project admin & SQL tooling | `SUPABASE_ACCESS_TOKEN` (required); optional `SUPABASE_PROJECT_REF` to scope one project. Default args include `--read-only` — edit the generated config if you need more flags. |
+| `@stripe/mcp` | npm | Stripe payments, customers, invoices | `STRIPE_SECRET_KEY` (sk_…); default tools = all. Edit the config to pass `--tools=` or `--stripe-account=` if needed. |
+| `awslabs.amazon-qbusiness-anonymous-mcp-server` | pip | Amazon Q Business anonymous app access | `QBUSINESS_APPLICATION_ID`, `AWS_PROFILE`, `AWS_REGION` |
+| `github.com/mark3labs/mcp-filesystem-server` | go | Cross-platform filesystem operations | None |
+| `ghcr.io/github/github-mcp-server` | docker | GitHub MCP server with wide toolset | `GITHUB_PERSONAL_ACCESS_TOKEN` |
+
+Need another server? Add it to `pack.yaml`, then rerun `mcp-pack select`.
 
 ## Safety features
 - **Atomic writes**: All client config updates happen via temporary files that replace the original in one step.

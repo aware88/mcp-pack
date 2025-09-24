@@ -5,6 +5,12 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - TBD
 
+## [0.1.3] - 2025-09-24
+### Added
+- Firecrawl, Supabase, and Stripe servers to the default pack with helpful metadata.
+- Selection runtime tips now include server-specific guidance for Firecrawl, Supabase, and Stripe.
+- README now documents all bundled servers with secrets and notes.
+
 ## [0.1.2] - 2025-09-24
 ### Fixed
 - CLI now reports the correct version (0.1.2) to match the published package.

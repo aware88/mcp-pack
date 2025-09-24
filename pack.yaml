@@ -58,3 +58,39 @@ servers:
       - name: GITHUB_PERSONAL_ACCESS_TOKEN
         help: "Token with repo scope for GitHub MCP server"
     tags: [github, docker]
+
+  - id: "firecrawl-mcp"
+    runtime: npm
+    install: "npm install -g firecrawl-mcp"
+    env:
+      - name: FIRECRAWL_API_KEY
+        help: "Create at https://www.firecrawl.dev/app/api-keys"
+    tags: [web, crawl, search]
+
+  - id: "@supabase/mcp-server-supabase"
+    runtime: npm
+    install: "npm install -g @supabase/mcp-server-supabase"
+    command: "npx"
+    args:
+      - -y
+      - "@supabase/mcp-server-supabase@latest"
+      - --read-only
+    env:
+      - name: SUPABASE_ACCESS_TOKEN
+        help: "Create a personal access token in Supabase dashboard"
+      - name: SUPABASE_PROJECT_REF
+        help: "Optional: scope to a single project (e.g. abcd1234)"
+    tags: [supabase, database, api]
+
+  - id: "@stripe/mcp"
+    runtime: npm
+    install: "npm install -g @stripe/mcp"
+    command: "npx"
+    args:
+      - -y
+      - "@stripe/mcp"
+      - --tools=all
+    env:
+      - name: STRIPE_SECRET_KEY
+        help: "Stripe secret API key (starts with sk_)"
+    tags: [stripe, payments, api]

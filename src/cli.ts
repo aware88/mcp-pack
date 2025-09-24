@@ -49,7 +49,7 @@ const adapters: Record<string, ClientAdapter> = {
 };
 
 const program = new Command();
-program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.2');
+program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.3');
 
 program
   .command('select')
@@ -594,6 +594,7 @@ async function printRuntimeGuidance(selectedIds: string[]): Promise<void> {
   const needsPip = runtimes.has('pip');
   const needsGo = runtimes.has('go');
   const needsDocker = runtimes.has('docker');
+  const selectedIdSet = new Set(definitions.map((def) => def.id));
 
   if (!needsPip && !needsGo && !needsDocker) {
     console.log(chalk.gray('All selected servers use the npm runtime. No extra setup required.'));
@@ -623,6 +624,21 @@ async function printRuntimeGuidance(selectedIds: string[]): Promise<void> {
     console.log('  Ubuntu/Debian:  sudo apt update && sudo apt install -y docker.io && sudo systemctl enable --now docker');
     console.log('  Fedora/CentOS:  sudo dnf install -y docker && sudo systemctl enable --now docker');
     console.log('  Windows: https://www.docker.com/products/docker-desktop/');
+  }
+  if (selectedIdSet.has('@supabase/mcp-server-supabase')) {
+    console.log(chalk.cyan('Supabase tips:'));
+    console.log('  • Set SUPABASE_ACCESS_TOKEN (required) and optionally SUPABASE_PROJECT_REF to scope one project.');
+    console.log('  • The generated config uses --read-only by default. Edit it afterwards to add other flags (e.g. --features=database).');
+  }
+  if (selectedIdSet.has('@stripe/mcp')) {
+    console.log(chalk.cyan('Stripe tips:'));
+    console.log('  • Set STRIPE_SECRET_KEY (sk_...).');
+    console.log('  • Customize the tool list by editing the config to change the --tools flag or add --stripe-account.');
+  }
+  if (selectedIdSet.has('firecrawl-mcp')) {
+    console.log(chalk.cyan('Firecrawl tips:'));
+    console.log('  • Create FIRECRAWL_API_KEY at firecrawl.dev.');
+    console.log('  • Heavy crawling may incur usage costs; review your Firecrawl plan.');
   }
   console.log(chalk.gray(`More details: ${RUNTIME_GUIDE_URL}\n`));
 }
