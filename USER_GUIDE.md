@@ -6,7 +6,7 @@ If you prefer the CLI to do most of the driving, run `node dist/cli.mjs walkthro
 
 ## What you need first
 - A computer with **Node.js 18 or newer**. If you have never installed Node before, download it from [nodejs.org](https://nodejs.org/en/download/) and follow the installer.
-- The AI client you want to configure (for example Claude Desktop, Cursor, or VS Code).
+- The AI client you want to configure (for example Claude Desktop, Cursor, VS Code, Windsurf, Warp, or Codex).
 
 ## Step 1 – Download the project
 If you received the project as a zip:
@@ -28,6 +28,13 @@ Run this once to download everything the CLI needs:
 npm install
 ```
 
+> **Runtime prerequisites:** Depending on the servers you install from `pack.yaml`, you may also need:
+> - Python 3.10+ with `pip` (AWS Labs servers)
+> - Go 1.21+ (Go-based servers)
+> - Docker Desktop / CLI (containerised servers)
+> Make sure the corresponding binary directories are on your `PATH` before writing configs.
+> If you stick with the default `pack.yaml` (npm servers only), you can skip the extra runtimes. The CLI will warn you if a selected server needs a missing tool.
+
 ## Step 3 – Build the CLI
 ```bash
 npm run build
@@ -46,7 +53,7 @@ The CLI will show a list of curated servers from `pack.yaml`. Use the arrow keys
 ```bash
 node dist/cli.mjs install --client claude
 ```
-Replace `claude` with `cursor`, `vscode`, `windsurf`, or `codex` to install for a different client. The command runs the installer defined in `pack.yaml` (usually `npx`), showing a spinner for each server.
+Replace `claude` with `cursor`, `vscode`, `windsurf`, `warp`, or `codex` (or supply a comma list if you want the install run attributed to more than one client). MCP Pack installs each selected server once using runtime-specific defaults—`npx` for npm packages, `python -m` for pip modules, compiled binaries for Go, or `docker run --rm` for Docker images—and honours any explicit `command`/`args` overrides you define in `pack.yaml`.
 
 If the CLI asks for environment variables (API keys), it will prompt you securely. You can press **Ctrl+C** to cancel, or add `--yes` to skip prompts (values are set to placeholders so you can edit them later).
 Have a `.env` or JSON file with your keys already? Add `--secrets path/to/file` so the CLI loads them automatically.
@@ -60,6 +67,8 @@ If the diff looks good:
 ```bash
 node dist/cli.mjs write-config --client claude --smoke-test
 ```
+For Warp the command writes `.mcp-pack/warp/warp-drive-export.json`; open Warp, choose **Settings -> Warp Drive -> Import JSON**, and pick that file to add the servers.
+
 For Cursor you can target the global or project file:
 ```bash
 node dist/cli.mjs write-config --client cursor --scope global

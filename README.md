@@ -2,7 +2,7 @@
 
 Universal MCP server installer for people who just want their AI tools to work. MCP Pack lets you pick a curated set of servers, install them with safe fallbacks, and update multiple client configuration files without ever touching JSON or TOML by hand.
 
-> **Status:** MVP ready. Supports Claude Desktop, Cursor, VS Code, Windsurf, and Codex config formats.
+> **Status:** MVP ready. Supports Claude Desktop, Cursor, VS Code, Windsurf, Warp (Warp Drive export), and Codex config formats.
 
 ## Contents
 - [Why MCP Pack?](#why-mcp-pack)
@@ -20,7 +20,7 @@ Universal MCP server installer for people who just want their AI tools to work. 
 
 ## Why MCP Pack?
 - **Curated servers in one file.** Choose from the vetted list stored in `pack.yaml`.
-- **One workflow for many clients.** Generate config for Claude, Cursor (global or project scopes), VS Code, Windsurf, and Codex.
+- **One workflow for many clients.** Generate config for Claude, Cursor (global or project scopes), VS Code, Windsurf, Warp, and Codex.
 - **Safe edits.** Automatic backups, readable diffs, and a `rollback` command keep configs recoverable.
 - **Profiles for different setups.** Maintain separate selections for workspaces or teams via the `profile` command group.
 
@@ -28,6 +28,15 @@ Universal MCP server installer for people who just want their AI tools to work. 
 - Node.js **18 or newer**
 - `npm` (ships with Node)
 - macOS, Linux, or Windows (CLI tested on macOS/Linux)
+- Optional runtimes when using certain servers from `pack.yaml`:
+  - Python 3.10+ with `pip` for AWS Labs servers (e.g. `awslabs.amazon-qbusiness-anonymous-mcp-server`)
+  - Go 1.21+ for Go-based servers (e.g. `github.com/mark3labs/mcp-filesystem-server`)
+  - Docker CLI for containerised servers (e.g. `ghcr.io/github/github-mcp-server`)
+  - Ensure each runtime’s binary directory (e.g. `~/.local/bin`, `$(go env GOPATH)/bin`) is on your `PATH` so generated configs can launch the binaries
+
+### Runtime Requirements (at a glance)
+- If you only use the default servers, Node/npm is enough.
+- If you uncomment pip/go/docker servers in `pack.yaml`, install those runtimes and ensure their CLIs are on your PATH. The CLI will warn you during `install`, `write-config`, and `doctor` if something is missing.
 
 ## Install the CLI
 
@@ -57,7 +66,7 @@ npx mcp-pack --help
    ```bash
    node dist/cli.mjs select
    ```
-2. **Install** the selected servers for Claude (replace `claude` with `cursor`, `vscode`, `windsurf`, or `codex` as needed):
+2. **Install** the selected servers for Claude (replace `claude` with `cursor`, `vscode`, `windsurf`, `warp`, or `codex` as needed, or pass a comma list to label multiple clients):
    ```bash
    node dist/cli.mjs install --client claude
    ```
@@ -66,6 +75,7 @@ npx mcp-pack --help
    node dist/cli.mjs write-config --client claude --dry-run
    node dist/cli.mjs write-config --client claude
    ```
+   For Warp the command creates `.mcp-pack/warp/warp-drive-export.json`; import that file via **Settings -> Warp Drive -> Import JSON** to register the servers.
 4. **Check for issues**:
    ```bash
    node dist/cli.mjs doctor --fix
@@ -78,8 +88,8 @@ Need extra guidance? Run `node dist/cli.mjs walkthrough` to step through selecti
 | Command | What it does |
 |---------|---------------|
 | `select [--profile <name>]` | Choose servers from `pack.yaml` and store them in `~/.mcp-pack/selections/<profile>.json`. |
-| `install --client <ids>[,<ids>] [--profile <name>] [--yes] [--verbose] [--secrets <path>]` | Installs the selected servers using `npx` with runtime fallbacks defined in `pack.yaml`. `--secrets` preloads env vars from `.env`/JSON. |
-| `write-config --client <id> [--profile <name>] [--dry-run] [--yes] [--scope <scope>] [--secrets <path>] [--smoke-test]` | Generates and writes client configuration files. `--dry-run` shows the diff, `--scope` applies to Cursor, `--secrets` hydrates env vars, `--smoke-test` verifies the result. |
+| `install --client <ids>[,<ids>] [--profile <name>] [--yes] [--verbose] [--secrets <path>]` | Installs each selected server once, then reuses it for the listed clients. Launch commands are inferred per runtime (npm/pip/go/docker) or honoured from explicit `command`/`args` overrides in `pack.yaml`. `--secrets` preloads env vars from `.env`/JSON. |
+| `write-config --client <id> [--profile <name>] [--dry-run] [--yes] [--scope <scope>] [--secrets <path>] [--smoke-test]` | Generates and writes client configuration files. For Warp it produces an importable Warp Drive JSON snippet. `--dry-run` shows the diff, `--scope` applies to Cursor, `--secrets` hydrates env vars, `--smoke-test` verifies the result. |
 | `doctor [--fix] [--profile <name>] [--report credentials] [--secrets <path>]` | Health check for Node/npm, expected config files, and required environment variables. `--fix` scaffolds missing files, `--report` outputs a credentials checklist, `--secrets` loads env vars first. |
 | `update-pack [--url <url>] [--dry-run]` | Download the latest `pack.yaml`, preview the diff, and optionally replace the local file. |
 | `profile export <file> [--profile <name>] [--include-env]` | Produce a sharable snapshot containing selected servers, optional env values, and detected clients. |
@@ -89,6 +99,10 @@ Need extra guidance? Run `node dist/cli.mjs walkthrough` to step through selecti
 | `rollback --client <id> [--scope <scope>]` | Restore the most recent backup for the chosen client. |
 
 Use `node dist/cli.mjs <command> --help` for command-specific flags. Replace `node dist/cli.mjs` with `mcp-pack` if installed globally.
+
+### Included servers
+
+The default `pack.yaml` includes npm servers only for a smooth first-run. Optional examples for pip/go/docker are provided commented out—uncomment as needed.
 
 ## Safety features
 - **Atomic writes**: All client config updates happen via temporary files that replace the original in one step.
@@ -131,6 +145,8 @@ node dist/cli.mjs write-config --client claude --dry-run
 ├── README.md            # This document
 └── USER_GUIDE.md        # Non-technical quick start
 ```
+
+Server entries in `pack.yaml` can optionally set explicit `command` and `args` fields when the default runtime heuristics (npm → `npx`, pip → `python -m`, go → the installed binary, docker → `docker run --rm`) are not sufficient.
 
 ## Support
 - See [`USER_GUIDE.md`](USER_GUIDE.md) for a plain-language tutorial.

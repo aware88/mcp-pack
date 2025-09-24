@@ -12,6 +12,7 @@ import { ClaudeAdapter } from './adapters/claude.js';
 import { CursorAdapter } from './adapters/cursor.js';
 import { VSCodeAdapter } from './adapters/vscode.js';
 import { WindsurfAdapter } from './adapters/windsurf.js';
+import { WarpAdapter } from './adapters/warp.js';
 import { CodexAdapter } from './adapters/codex.js';
 import { ClientAdapter } from './adapters/types.js';
 import { McpServerConfig, WriteConfigOptions } from './types.js';
@@ -42,6 +43,7 @@ const adapters: Record<string, ClientAdapter> = {
   cursor: new CursorAdapter(),
   vscode: new VSCodeAdapter(),
   windsurf: new WindsurfAdapter(),
+  warp: new WarpAdapter(),
   codex: new CodexAdapter(),
 };
 
@@ -503,13 +505,39 @@ async function promptForEnv(servers: ServerDefinition[], assumeYes: boolean): Pr
   return envByServer;
 }
 
+function deriveLaunchCommand(server: ServerDefinition): { command: string; args: string[] } {
+  if (server.command) {
+    return { command: server.command, args: server.args ?? [] };
+  }
+
+  switch (server.runtime) {
+    case 'npm':
+      return { command: 'npx', args: ['-y', server.id] };
+    case 'pip': {
+      const moduleName = server.id.replace(/-/g, '_');
+      return { command: 'python', args: ['-m', moduleName] };
+    }
+    case 'go': {
+      const match = server.install.match(/go\s+install\s+([^\s@]+)(?:@[^\s]+)?/);
+      const modulePath = match ? match[1] : server.id;
+      const binary = modulePath.split('/').pop() ?? modulePath;
+      return { command: binary, args: [] };
+    }
+    case 'docker':
+      return { command: 'docker', args: ['run', '--rm', server.id] };
+    default:
+      return { command: 'npx', args: ['-y', server.id] };
+  }
+}
+
 function buildServerConfigs(servers: ServerDefinition[], envInputs: Record<string, EnvInput>): Record<string, McpServerConfig> {
   const configs: Record<string, McpServerConfig> = {};
   for (const server of servers) {
+    const launch = deriveLaunchCommand(server);
     const env = envInputs[server.id];
     const config: McpServerConfig = {
-      command: 'npx',
-      args: ['-y', server.id],
+      command: launch.command,
+      args: launch.args,
     };
     if (env && Object.keys(env).length > 0) {
       config.env = env;
@@ -562,18 +590,35 @@ async function installForClients(clientIds: string[], profile: string, options: 
     return server;
   }));
 
-  for (const adapter of clientIds.map((id) => adapters[id])) {
-    console.log(chalk.cyan(`\nInstalling for ${adapter.displayName}...`));
-    for (const server of servers) {
-      const spinner = ora(`Installing ${server.id}`).start();
-      try {
-        await installServer(server, options.verbose);
-        spinner.succeed(`Installed ${server.id}`);
-      } catch (error) {
-        spinner.fail(`Failed to install ${server.id}`);
-        console.error(chalk.red((error as Error).message));
-      }
+  // Summarise runtime prerequisites for visibility
+  const runtimes = new Set(servers.map((s) => s.runtime));
+  const needsPip = runtimes.has('pip');
+  const needsGo = runtimes.has('go');
+  const needsDocker = runtimes.has('docker');
+  if (needsPip || needsGo || needsDocker) {
+    const parts: string[] = [];
+    if (needsPip) parts.push('Python 3 + pip');
+    if (needsGo) parts.push('Go toolchain');
+    if (needsDocker) parts.push('Docker CLI');
+    console.log(chalk.yellow(`\nRuntime requirements detected: ${parts.join(', ')}.`));
+    console.log(chalk.gray('Ensure these are installed and on your PATH before launching servers.'));
+  }
+
+  console.log(chalk.cyan('\nInstalling selected servers (once for all clients)...'));
+  for (const server of servers) {
+    const spinner = ora(`Installing ${server.id}`).start();
+    try {
+      await installServer(server, options.verbose);
+      spinner.succeed(`Installed ${server.id}`);
+    } catch (error) {
+      spinner.fail(`Failed to install ${server.id}`);
+      console.error(chalk.red((error as Error).message));
     }
+  }
+
+  if (clientIds.length > 0) {
+    const clientLabels = clientIds.map((id) => adapters[id].displayName).join(', ');
+    console.log(chalk.cyan(`\nUsing these installs for: ${clientLabels}`));
   }
 
   if (!options.assumeYes) {
@@ -619,6 +664,26 @@ async function writeConfigFlow(params: WriteConfigFlowParams): Promise<void> {
     }
     return server;
   }));
+
+  // Preflight: warn if required launchers are likely missing
+  const launchers = new Set<string>();
+  for (const s of runtimeServers) {
+    const lc = deriveLaunchCommand(s);
+    launchers.add(lc.command);
+  }
+  const launcherHints: { cmd: string; hint: string }[] = [];
+  if (launchers.has('python')) launcherHints.push({ cmd: 'python', hint: 'Install Python 3.10+ and ensure python/python3 is on PATH' });
+  if (launchers.has('docker')) launcherHints.push({ cmd: 'docker', hint: 'Install Docker Desktop/CLI and ensure docker is on PATH' });
+  // Heuristic for Go: when runtime is go and no explicit command provided, binary is expected on PATH
+  if (runtimeServers.some((s) => s.runtime === 'go' && !s.command)) {
+    launcherHints.push({ cmd: '<go-binary>', hint: 'Go-installed binaries must be on PATH (e.g. $(go env GOPATH)/bin)' });
+  }
+  if (launcherHints.length > 0) {
+    console.log(chalk.gray('Launcher checks:'));
+    for (const h of launcherHints) {
+      console.log(`• ${h.cmd}: ${h.hint}`);
+    }
+  }
 
   const envInputs = await promptForEnv(runtimeServers, assumeYes || dryRun);
   const serverConfigs = buildServerConfigs(runtimeServers, envInputs);
@@ -705,6 +770,18 @@ async function doctorFlow(profile: string, options: { fix: boolean; report?: str
   }
 
   const servers = await ensureSelections(profile);
+  // Runtime-aware tool checks based on selections
+  const selectedServerDefs = await Promise.all(servers.map((id) => registry.getServer(id)));
+  const selectedRuntimes = new Set((selectedServerDefs.filter(Boolean) as ServerDefinition[]).map((s) => s.runtime));
+  if (selectedRuntimes.has('pip')) {
+    results.push(await checkCommand('python3', 'python3'));
+  }
+  if (selectedRuntimes.has('go')) {
+    results.push(await checkCommand('go', 'go'));
+  }
+  if (selectedRuntimes.has('docker')) {
+    results.push(await checkCommand('docker', 'docker'));
+  }
   const envMissing: string[] = [];
   const envCatalog: { name: string; server: string; help?: string }[] = [];
 

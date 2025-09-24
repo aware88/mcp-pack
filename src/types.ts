@@ -1,4 +1,4 @@
-export type ClientId = 'claude' | 'vscode' | 'cursor' | 'windsurf' | 'codex';
+export type ClientId = 'claude' | 'vscode' | 'cursor' | 'windsurf' | 'warp' | 'codex';
 
 export interface McpServerConfig {
   command: string;

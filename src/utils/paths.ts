@@ -30,6 +30,10 @@ export function windsurfConfigPath(): string {
   return path.join(homedir(), '.codeium', 'windsurf', 'mcp_config.json');
 }
 
+export function warpSnippetPath(workspaceRoot: string): string {
+  return path.join(workspaceRoot, '.mcp-pack', 'warp', 'warp-drive-export.json');
+}
+
 export function codexConfigPath(): string {
   return path.join(homedir(), '.codex', 'config.toml');
 }

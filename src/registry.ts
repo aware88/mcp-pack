@@ -16,6 +16,8 @@ export interface ServerDefinition {
   install: string;
   env: ServerEnvVar[];
   tags?: string[];
+  command?: string;
+  args?: string[];
 }
 
 interface PackFile {

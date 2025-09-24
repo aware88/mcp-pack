@@ -20,3 +20,44 @@ servers:
       - name: GITHUB_PERSONAL_ACCESS_TOKEN
         help: "Personal Access Token with repo scope"
     tags: [dev, github]
+
+  # Optional servers (uncomment to enable)
+  # These require extra runtimes. Ensure you install the runtime and have it on PATH.
+  #
+  # - id: "awslabs.amazon-qbusiness-anonymous-mcp-server"
+  #   runtime: pip
+  #   install: "pip install --user --upgrade awslabs.amazon-qbusiness-anonymous-mcp-server"
+  #   command: "awslabs.amazon-qbusiness-anonymous-mcp-server"
+  #   args: []
+  #   env:
+  #     - name: QBUSINESS_APPLICATION_ID
+  #       help: "Amazon Q Business anonymous application ID"
+  #     - name: AWS_PROFILE
+  #       help: "AWS profile configured with Amazon Q Business access"
+  #     - name: AWS_REGION
+  #       help: "Region hosting your Amazon Q Business application"
+  #   tags: [aws, qbusiness, pip]
+  #
+  # - id: "github.com/mark3labs/mcp-filesystem-server"
+  #   runtime: go
+  #   install: "go install github.com/mark3labs/mcp-filesystem-server@latest"
+  #   command: "mcp-filesystem-server"
+  #   args: []
+  #   env: []
+  #   tags: [filesystem, go]
+  #
+  # - id: "ghcr.io/github/github-mcp-server"
+  #   runtime: docker
+  #   install: "docker pull ghcr.io/github/github-mcp-server:latest"
+  #   command: "docker"
+  #   args:
+  #     - run
+  #     - --rm
+  #     - -i
+  #     - -e
+  #     - GITHUB_PERSONAL_ACCESS_TOKEN
+  #     - ghcr.io/github/github-mcp-server:latest
+  #   env:
+  #     - name: GITHUB_PERSONAL_ACCESS_TOKEN
+  #       help: "Token with repo scope for GitHub MCP server"
+  #   tags: [github, docker]
