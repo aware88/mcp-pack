@@ -28,6 +28,7 @@ const DEFAULT_PROFILE = 'default';
 const WORKSPACE_ROOT = process.cwd();
 const DEFAULT_PACK_URL = 'https://raw.githubusercontent.com/aware88/mcp-pack/main/pack.yaml';
 const SNAPSHOT_VERSION = 1;
+const RUNTIME_GUIDE_URL = 'https://github.com/aware88/mcp-pack#setup-runtimes';
 
 interface ProfileSnapshot {
   version: number;
@@ -551,6 +552,8 @@ async function selectServersInteractive(profile: string): Promise<string[]> {
   const servers = await registry.listServers();
   const existing = await readSelections(profile);
 
+  console.log(chalk.cyan('Tip: npm servers work immediately. pip / go / docker servers need those tools installed – see Setup Runtimes in the README.'));
+
   const choices = servers.map((server) => ({
     name: server.id,
     message: `${server.id} (${server.runtime})`,
@@ -565,6 +568,8 @@ async function selectServersInteractive(profile: string): Promise<string[]> {
   const selected = await multiSelectPrompt('Select servers to include', choices, existing);
   await writeSelections(profile, selected);
 
+  await printRuntimeGuidance(selected);
+
   console.log(chalk.green(`Saved ${selected.length} server(s) to profile '${profile}'.`));
   console.log(chalk.gray(`Selections stored at ${selectionsDir()}`));
   return selected;
@@ -573,6 +578,53 @@ async function selectServersInteractive(profile: string): Promise<string[]> {
 interface InstallFlowOptions {
   assumeYes: boolean;
   verbose: boolean;
+}
+
+async function printRuntimeGuidance(selectedIds: string[]): Promise<void> {
+  if (selectedIds.length === 0) {
+    return;
+  }
+
+  const definitions = (await Promise.all(selectedIds.map((id) => registry.getServer(id)))).filter(Boolean) as ServerDefinition[];
+  if (definitions.length === 0) {
+    return;
+  }
+
+  const runtimes = new Set(definitions.map((def) => def.runtime));
+  const needsPip = runtimes.has('pip');
+  const needsGo = runtimes.has('go');
+  const needsDocker = runtimes.has('docker');
+
+  if (!needsPip && !needsGo && !needsDocker) {
+    console.log(chalk.gray('All selected servers use the npm runtime. No extra setup required.'));
+    return;
+  }
+
+  console.log(chalk.cyan('\nRuntime setup help (install before running install/write-config):'));
+  if (needsPip) {
+    console.log(chalk.bold('Python (pip)'));
+    console.log('  macOS:  brew install python');
+    console.log('  Ubuntu/Debian:  sudo apt update && sudo apt install -y python3 python3-pip');
+    console.log('  Fedora/CentOS:  sudo dnf install -y python3 python3-pip');
+    console.log('  Windows: https://www.python.org/downloads/');
+    console.log(chalk.gray('  PATH tip: add ~/.local/bin to PATH so pip-installed CLIs are available.'));
+  }
+  if (needsGo) {
+    console.log(chalk.bold('Go'));
+    console.log('  macOS:  brew install go');
+    console.log('  Ubuntu/Debian:  sudo apt update && sudo apt install -y golang');
+    console.log('  Fedora/CentOS:  sudo dnf install -y golang');
+    console.log('  Windows: https://go.dev/dl/');
+    console.log(chalk.gray('  PATH tip: add $(go env GOPATH)/bin (typically ~/go/bin) to PATH.'));
+  }
+  if (needsDocker) {
+    console.log(chalk.bold('Docker'));
+    console.log('  macOS:  brew install --cask docker (then launch Docker Desktop once)');
+    console.log('  Ubuntu/Debian:  sudo apt update && sudo apt install -y docker.io && sudo systemctl enable --now docker');
+    console.log('  Fedora/CentOS:  sudo dnf install -y docker && sudo systemctl enable --now docker');
+    console.log('  Windows: https://www.docker.com/products/docker-desktop/');
+  }
+  console.log(chalk.gray(`More details: ${RUNTIME_GUIDE_URL}\n`));
 }
 
 async function installForClients(clientIds: string[], profile: string, options: InstallFlowOptions): Promise<void> {
@@ -679,7 +731,7 @@ async function writeConfigFlow(params: WriteConfigFlowParams): Promise<void> {
     launcherHints.push({ cmd: '<go-binary>', hint: 'Go-installed binaries must be on PATH (e.g. $(go env GOPATH)/bin)' });
   }
   if (launcherHints.length > 0) {
-    console.log(chalk.gray('Launcher checks:'));
+    console.log(chalk.gray(`Launcher checks (see ${RUNTIME_GUIDE_URL}):`));
     for (const h of launcherHints) {
       console.log(`• ${h.cmd}: ${h.hint}`);
     }
@@ -774,13 +826,25 @@ async function doctorFlow(profile: string, options: { fix: boolean; report?: str
   const selectedServerDefs = await Promise.all(servers.map((id) => registry.getServer(id)));
   const selectedRuntimes = new Set((selectedServerDefs.filter(Boolean) as ServerDefinition[]).map((s) => s.runtime));
   if (selectedRuntimes.has('pip')) {
-    results.push(await checkCommand('python3', 'python3'));
+    const pythonCheck = await checkCommand('python3', 'python3');
+    results.push(pythonCheck);
+    if (pythonCheck.status !== 'ok') {
+      results.push({ name: 'python3 setup', status: 'warn', message: `Install Python 3: ${RUNTIME_GUIDE_URL}` });
+    }
   }
   if (selectedRuntimes.has('go')) {
-    results.push(await checkCommand('go', 'go'));
+    const goCheck = await checkCommand('go', 'go');
+    results.push(goCheck);
+    if (goCheck.status !== 'ok') {
+      results.push({ name: 'Go setup', status: 'warn', message: `Install Go: ${RUNTIME_GUIDE_URL}` });
+    }
   }
   if (selectedRuntimes.has('docker')) {
-    results.push(await checkCommand('docker', 'docker'));
+    const dockerCheck = await checkCommand('docker', 'docker');
+    results.push(dockerCheck);
+    if (dockerCheck.status !== 'ok') {
+      results.push({ name: 'Docker setup', status: 'warn', message: `Install Docker: ${RUNTIME_GUIDE_URL}` });
+    }
   }
   const envMissing: string[] = [];
   const envCatalog: { name: string; server: string; help?: string }[] = [];

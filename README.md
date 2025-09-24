@@ -16,6 +16,7 @@ Quick TL;DR:
 ## Contents
 - [Why MCP Pack?](#why-mcp-pack)
 - [System requirements](#system-requirements)
+- [Setup runtimes](#setup-runtimes)
 - [Install the CLI](#install-the-cli)
 - [Quick start](#quick-start)
 - [Command overview](#command-overview)
@@ -46,6 +47,30 @@ Quick TL;DR:
 ### Runtime Requirements (at a glance)
 - If you only use the default servers, Node/npm is enough.
 - If you uncomment pip/go/docker servers in `pack.yaml`, install those runtimes and ensure their CLIs are on your PATH. The CLI will warn you during `install`, `write-config`, and `doctor` if something is missing.
+
+## Setup runtimes
+
+Use the commands that match your operating system. After installation, ensure the noted directories are on your `PATH`.
+
+### Python (pip)
+- **macOS (Homebrew)**: `brew install python`
+- **Ubuntu / Debian**: `sudo apt update && sudo apt install -y python3 python3-pip`
+- **Fedora / CentOS**: `sudo dnf install -y python3 python3-pip`
+- **Windows**: download from [python.org/downloads](https://www.python.org/downloads/)
+- **PATH tip**: add `~/.local/bin` (macOS/Linux) so pip-installed CLIs are available.
+
+### Go
+- **macOS (Homebrew)**: `brew install go`
+- **Ubuntu / Debian**: `sudo apt update && sudo apt install -y golang`
+- **Fedora / CentOS**: `sudo dnf install -y golang`
+- **Windows**: download from [go.dev/dl](https://go.dev/dl/)
+- **PATH tip**: add `$(go env GOPATH)/bin` (typically `~/go/bin`) to PATH.
+
+### Docker
+- **macOS (Homebrew)**: `brew install --cask docker` (launch Docker Desktop once to finish setup)
+- **Ubuntu / Debian**: `sudo apt update && sudo apt install -y docker.io && sudo systemctl enable --now docker`
+- **Fedora / CentOS**: `sudo dnf install -y docker && sudo systemctl enable --now docker`
+- **Windows**: install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
 ## Install the CLI
 
