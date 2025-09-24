@@ -4,6 +4,11 @@ Universal MCP server installer for people who just want their AI tools to work. 
 
 > **Status:** MVP ready. Supports Claude Desktop, Cursor, VS Code, Windsurf, Warp (Warp Drive export), and Codex config formats.
 
+Quick TL;DR:
+- `npm i -g mcp-pack`
+- `mcp-pack select`
+- `mcp-pack write-config --client claude --dry-run`
+
 ## Contents
 - [Why MCP Pack?](#why-mcp-pack)
 - [System requirements](#system-requirements)
