@@ -141,9 +141,13 @@ Use `node dist/cli.mjs <command> --help` for command-specific flags. Replace `no
 | `@modelcontextprotocol/server-filesystem` | npm | Browse local files and folders | None |
 | `@modelcontextprotocol/server-brave-search` | npm | Brave Search web results | `BRAVE_API_KEY` (Brave Search API) |
 | `@modelcontextprotocol/server-github` | npm | GitHub repos, issues, pull requests | `GITHUB_PERSONAL_ACCESS_TOKEN` with repo scope |
+| `@notionhq/notion-mcp-server` | npm | Work with Notion pages and databases | `NOTION_TOKEN` internal integration token |
 | `firecrawl-mcp` | npm | Firecrawl web crawling / scraping | `FIRECRAWL_API_KEY` (create at firecrawl.dev) |
-| `@supabase/mcp-server-supabase` | npm | Supabase project admin & SQL tooling | `SUPABASE_ACCESS_TOKEN` (required); optional `SUPABASE_PROJECT_REF` to scope one project. Default args include `--read-only` — edit the generated config if you need more flags. |
-| `@stripe/mcp` | npm | Stripe payments, customers, invoices | `STRIPE_SECRET_KEY` (sk_…); default tools = all. Edit the config to pass `--tools=` or `--stripe-account=` if needed. |
+| `airtable-mcp-server` | npm | Airtable base browsing and edits | `AIRTABLE_API_KEY` with schema/data scopes |
+| `@supabase/mcp-server-supabase` | npm | Supabase project admin & SQL tooling | `SUPABASE_ACCESS_TOKEN` (required); optional `SUPABASE_PROJECT_REF` to scope one project. Default config passes `--read-only` — edit the generated config if you need more flags. |
+| `@stripe/mcp` | npm | Stripe payments, customers, invoices | `STRIPE_SECRET_KEY` (sk_…); edit config to change `--tools` / `--stripe-account`. |
+| `github.com/korotovsky/slack-mcp-server` | go | Slack messaging, history, search | Provide either `SLACK_MCP_XOXP_TOKEN` or both `SLACK_MCP_XOXC_TOKEN` + `SLACK_MCP_XOXD_TOKEN`. Optional extras documented in README. |
+| `workspace-mcp` | pip | Google Workspace (Gmail, Drive, Calendar, Docs, etc.) | `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET` (desktop OAuth credentials) |
 | `awslabs.amazon-qbusiness-anonymous-mcp-server` | pip | Amazon Q Business anonymous app access | `QBUSINESS_APPLICATION_ID`, `AWS_PROFILE`, `AWS_REGION` |
 | `github.com/mark3labs/mcp-filesystem-server` | go | Cross-platform filesystem operations | None |
 | `ghcr.io/github/github-mcp-server` | docker | GitHub MCP server with wide toolset | `GITHUB_PERSONAL_ACCESS_TOKEN` |

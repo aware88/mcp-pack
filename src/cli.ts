@@ -49,7 +49,7 @@ const adapters: Record<string, ClientAdapter> = {
 };
 
 const program = new Command();
-program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.3');
+program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.4');
 
 program
   .command('select')
@@ -624,6 +624,25 @@ async function printRuntimeGuidance(selectedIds: string[]): Promise<void> {
     console.log('  Ubuntu/Debian:  sudo apt update && sudo apt install -y docker.io && sudo systemctl enable --now docker');
     console.log('  Fedora/CentOS:  sudo dnf install -y docker && sudo systemctl enable --now docker');
     console.log('  Windows: https://www.docker.com/products/docker-desktop/');
+  }
+  if (selectedIdSet.has('@notionhq/notion-mcp-server')) {
+    console.log(chalk.cyan('Notion tips:'));
+    console.log('  • Create an internal integration token (ntn_...) at notion.so/profile/integrations and share the pages you need.');
+  }
+  if (selectedIdSet.has('airtable-mcp-server')) {
+    console.log(chalk.cyan('Airtable tips:'));
+    console.log('  • Generate an Airtable personal access token (pat...) with schema/data scopes.');
+    console.log('  • Restrict the token to specific bases to limit access if desired.');
+  }
+  if (selectedIdSet.has('github.com/korotovsky/slack-mcp-server')) {
+    console.log(chalk.cyan('Slack tips:'));
+    console.log('  • Provide either SLACK_MCP_XOXP_TOKEN or both SLACK_MCP_XOXC_TOKEN and SLACK_MCP_XOXD_TOKEN.');
+    console.log('  • Optional environment variables let you enable posting or limit channel access — see the Slack MCP README.');
+  }
+  if (selectedIdSet.has('workspace-mcp')) {
+    console.log(chalk.cyan('Google Workspace tips:'));
+    console.log('  • Supply Google desktop OAuth credentials via GOOGLE_OAUTH_CLIENT_ID / SECRET.');
+    console.log('  • Edit the generated config to adjust tool tiers or transports (e.g. --tools gmail drive calendar).');
   }
   if (selectedIdSet.has('@supabase/mcp-server-supabase')) {
     console.log(chalk.cyan('Supabase tips:'));

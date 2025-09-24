@@ -5,6 +5,12 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - TBD
 
+## [0.1.4] - 2025-09-24
+### Added
+- Added Notion, Slack, Google Workspace, and Airtable servers to the default pack with docs and setup tips.
+- CLI runtime helper now includes server-specific guidance for Notion, Airtable, Slack, Google Workspace.
+- README table documents secrets/notes for all bundled servers.
+
 ## [0.1.3] - 2025-09-24
 ### Added
 - Firecrawl, Supabase, and Stripe servers to the default pack with helpful metadata.

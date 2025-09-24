@@ -94,3 +94,47 @@ servers:
       - name: STRIPE_SECRET_KEY
         help: "Stripe secret API key (starts with sk_)"
     tags: [stripe, payments, api]
+
+  - id: "@notionhq/notion-mcp-server"
+    runtime: npm
+    install: "npm install -g @notionhq/notion-mcp-server"
+    env:
+      - name: NOTION_TOKEN
+        help: "Internal integration token (ntn_...) from notion.so/profile/integrations"
+    tags: [notion, docs, productivity]
+
+  - id: "github.com/korotovsky/slack-mcp-server"
+    runtime: go
+    install: "go install github.com/korotovsky/slack-mcp-server@latest"
+    command: "slack-mcp-server"
+    args: []
+    env:
+      - name: SLACK_MCP_XOXP_TOKEN
+        help: "Slack user token (xoxp-...) or provide xoxc/xoxd"
+      - name: SLACK_MCP_XOXC_TOKEN
+        help: "Slack browser token (xoxc-...)"
+      - name: SLACK_MCP_XOXD_TOKEN
+        help: "Slack cookie token (xoxd-...)"
+    tags: [slack, communications, chat]
+
+  - id: "workspace-mcp"
+    runtime: pip
+    install: "pip install --user --upgrade workspace-mcp"
+    command: "workspace-mcp"
+    args:
+      - --transport
+      - stdio
+    env:
+      - name: GOOGLE_OAUTH_CLIENT_ID
+        help: "Desktop OAuth client ID"
+      - name: GOOGLE_OAUTH_CLIENT_SECRET
+        help: "Desktop OAuth client secret"
+    tags: [google, workspace, productivity]
+
+  - id: "airtable-mcp-server"
+    runtime: npm
+    install: "npm install -g airtable-mcp-server"
+    env:
+      - name: AIRTABLE_API_KEY
+        help: "Personal access token (pat...) with schema/data scopes"
+    tags: [airtable, database, productivity]
