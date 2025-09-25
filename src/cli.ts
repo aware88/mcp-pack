@@ -4,6 +4,7 @@ import ora from 'ora';
 import fs from 'fs-extra';
 import path from 'path';
 
+import { fileURLToPath } from 'node:url';
 import { registry, ServerDefinition } from './registry.js';
 import { multiSelectPrompt, confirmPrompt, passwordPrompt } from './utils/prompts.js';
 import { readSelections, writeSelections, listProfiles, copyProfile } from './utils/selections.js';
@@ -30,6 +31,20 @@ const DEFAULT_PACK_URL = 'https://raw.githubusercontent.com/aware88/mcp-pack/mai
 const SNAPSHOT_VERSION = 1;
 const RUNTIME_GUIDE_URL = 'https://github.com/aware88/mcp-pack#setup-runtimes';
 
+const packageVersion = (() => {
+  try {
+    const packageJsonPath = fileURLToPath(new URL('../package.json', import.meta.url));
+    const pkg = fs.readJsonSync(packageJsonPath, { throws: false }) as { version?: string } | null;
+    if (pkg && typeof pkg.version === 'string') {
+      return pkg.version;
+    }
+  } catch (error) {
+    // Swallow to avoid crashing if package metadata is missing in unusual install environments.
+  }
+
+  return '0.0.0';
+})();
+
 interface ProfileSnapshot {
   version: number;
   generatedAt: string;
@@ -49,7 +64,10 @@ const adapters: Record<string, ClientAdapter> = {
 };
 
 const program = new Command();
-program.name('mcp-pack').description('Cross-client MCP installer and config writer').version('0.1.4');
+program
+  .name('mcp-pack')
+  .description('Cross-client MCP installer and config writer')
+  .version(packageVersion);
 
 program
   .command('select')

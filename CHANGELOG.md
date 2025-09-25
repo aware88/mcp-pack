@@ -5,6 +5,10 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - TBD
 
+## [0.2.1] - 2025-09-24
+### Fixed
+- CLI now reads the version from package metadata so `mcp-pack --version` matches the published build.
+
 ## [0.2.0] - 2025-09-24
 ### Added
 - Expanded the default pack with ~40 additional SaaS, infrastructure, and remote MCP servers, complete with runtime metadata and setup guidance.
