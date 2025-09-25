@@ -5,6 +5,11 @@ All notable changes to this project will be documented here.
 ## [Unreleased]
 - TBD
 
+## [0.2.0] - 2025-09-24
+### Added
+- Expanded the default pack with ~40 additional SaaS, infrastructure, and remote MCP servers, complete with runtime metadata and setup guidance.
+- Verified the expanded catalog with build, lint, unit, and smoke checks before publishing.
+
 ## [0.1.4] - 2025-09-24
 ### Added
 - Added Notion, Slack, Google Workspace, and Airtable servers to the default pack with docs and setup tips.
