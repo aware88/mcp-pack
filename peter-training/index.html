@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0f16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Peter Training">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Peter Training OS</title>
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div><h1>Peter Training OS</h1><div class="subtitle">Recomp · muscle · VO₂max · BJJ</div></div>
+      <div class="pill"><span class="dot"></span><span id="saveStateText">lokalno shranjeno</span></div>
+    </div>
+    <div class="nav">
+      <button data-view="dashboard" class="active">Dashboard</button>
+      <button data-view="workout">Trening</button>
+      <button data-view="plan">Plan</button>
+      <button data-view="progress">Napredek</button>
+      <button data-view="library">Program</button>
+      <button data-view="settings">Nastavitve</button>
+    </div>
+  </div>
+
+  <section id="dashboard" class="view active">
+    <div class="hero">
+      <div class="card">
+        <div class="row between"><div><div class="muted small">Današnji fokus</div><div class="big" id="todayFocus">—</div></div><span class="badge green" id="todayBadge">PLAN</span></div>
+        <p class="muted" id="todayAdvice">—</p>
+        <div class="row wrap">
+          <button class="btn primary" id="startToday">Začni današnji trening</button>
+          <button class="btn" data-goto="progress">Vnesi metrike</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Cilj recomposition</h2>
+        <div class="metricline"><span>Teža</span><b><span id="dashWeight">—</span> → <span id="goalWeightDash">85</span> kg</b></div>
+        <div class="metricline"><span>Body fat</span><b><span id="dashBF">—</span> → <span id="goalBFDash">20</span>%</b></div>
+        <div class="metricline"><span>VO₂max</span><b><span id="dashVO2">—</span> → <span id="goalVO2Dash">52</span>+</b></div>
+      </div>
+    </div>
+
+    <div class="kpis" style="margin-top:12px">
+      <div class="kpi"><div class="v" id="kpi7">0</div><div class="l">treningov / 7 dni</div></div>
+      <div class="kpi"><div class="v" id="kpiVolume">0</div><div class="l">ton volumna / 7 dni</div></div>
+      <div class="kpi"><div class="v" id="kpiStreak">0</div><div class="l">tednov konsistence</div></div>
+      <div class="kpi"><div class="v" id="kpiPR">0</div><div class="l">PR izboljšav</div></div>
+    </div>
+
+    <div class="grid two" style="margin-top:12px">
+      <div class="card">
+        <div class="row between"><h2>Readiness</h2><span class="badge" id="readinessBadge">manual</span></div>
+        <div class="form3">
+          <div><label>Sleep / 10</label><input id="readySleep" type="number" min="1" max="10" value="7"></div>
+          <div><label>Energy / 10</label><input id="readyEnergy" type="number" min="1" max="10" value="7"></div>
+          <div><label>Soreness / 10</label><input id="readySore" type="number" min="1" max="10" value="3"></div>
+        </div>
+        <div id="readinessText" class="suggest">—</div>
+      </div>
+      <div class="card">
+        <h2>Današnji makro cilj</h2>
+        <div class="kpis" style="grid-template-columns:repeat(2,1fr)">
+          <div class="kpi"><div class="v" id="caloriesKpi">2800</div><div class="l">kcal</div></div>
+          <div class="kpi"><div class="v" id="proteinKpi">175 g</div><div class="l">protein</div></div>
+          <div class="kpi"><div class="v" id="carbsKpi">—</div><div class="l">ogljikovi hidrati</div></div>
+          <div class="kpi"><div class="v" id="fatKpi">75 g</div><div class="l">maščobe</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="row between"><h2>Zadnji treningi</h2><button class="btn smallbtn ghost" data-goto="progress">vsa zgodovina</button></div>
+      <div id="dashHistory"></div>
+    </div>
+  </section>
+
+  <section id="workout" class="view">
+    <div class="card">
+      <div class="form2">
+        <div><label>Trening</label><select id="workoutSelect"></select></div>
+        <div><label>Datum</label><input id="workoutDate" type="date"></div>
+      </div>
+      <div class="row between" style="margin-top:10px">
+        <div class="small muted">Session: <b class="timer" id="sessionTimer">00:00</b></div>
+        <div class="small muted">Rest: <b class="timer" id="restTimer">00:00</b></div>
+      </div>
+    </div>
+    <div id="workoutBody"></div>
+    <div class="card">
+      <label>Opombe</label>
+      <textarea id="workoutNotes" placeholder="Počutje, tehnika, bolečina, PR, kako je šel BJJ prej/pozneje ..."></textarea>
+    </div>
+    <div class="workout-actions">
+      <button class="btn" id="startSession">Start / reset timer</button>
+      <button class="btn blue" id="finishWorkout">Shrani trening</button>
+      <button class="btn danger" id="clearWorkout">Počisti vnos</button>
+    </div>
+  </section>
+
+  <section id="plan" class="view">
+    <div class="card">
+      <div class="row between"><div><h2>Tedenski plan</h2><div class="small muted">Osnova, ki jo lahko poljubno spremeniš.</div></div><button class="btn smallbtn" id="editPlanBtn">Uredi</button></div>
+      <div class="week" id="weekPlan"></div>
+    </div>
+    <div class="grid two">
+      <div class="card">
+        <h2>VO₂max strategija</h2>
+        <p class="small muted">Primarni intervalni dan: 4 × 4 min zelo močno / 3 min zelo lahkotno. Če si utrujen od BJJ, uporabi 5 × 3 min. 10/20 sprint protokol naj bo občasna zamenjava, ne dodatni brutalni session.</p>
+        <div class="metricline"><span>Primarni cilj</span><b>VO₂max 52 → 55</b></div>
+        <div class="metricline"><span>Intervali</span><b>1× / teden</b></div>
+        <div class="metricline"><span>Koraki</span><b>~13k/dan je dovolj</b></div>
+      </div>
+      <div class="card">
+        <h2>Recomp pravila</h2>
+        <div class="list">
+          <div class="listitem small">Teža je lahko 81–82 kg, če pas pada in moč raste.</div>
+          <div class="listitem small">Ko dosežeš zgornji rep-range z 1–2 RIR, app predlaga višjo težo.</div>
+          <div class="listitem small">Če readiness pade, najprej skrajšaj Lower B ali ga izpusti.</div>
+          <div class="listitem small">BJJ šteje kot intenzivna obremenitev; ni “recovery cardio”.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progress" class="view">
+    <div class="grid two">
+      <div class="card">
+        <h2>Vnos telesnih metrik</h2>
+        <div class="form2">
+          <div><label>Datum</label><input id="metricDate" type="date"></div>
+          <div><label>Teža (kg)</label><input id="metricWeight" type="number" step=".1"></div>
+          <div><label>Body fat (%)</label><input id="metricBF" type="number" step=".1"></div>
+          <div><label>Pas (cm)</label><input id="metricWaist" type="number" step=".1"></div>
+          <div><label>VO₂max</label><input id="metricVO2" type="number" step=".1"></div>
+          <div><label>Resting HR</label><input id="metricRHR" type="number"></div>
+          <div><label>HRV (ms)</label><input id="metricHRV" type="number"></div>
+          <div><label>Koraki / dan</label><input id="metricSteps" type="number"></div>
+          <div><label>Acute load</label><input id="metricAcute" type="number"></div>
+          <div><label>Chronic load</label><input id="metricChronic" type="number"></div>
+        </div>
+        <button class="btn good" id="saveMetric" style="width:100%;margin-top:10px">Shrani metrike</button>
+      </div>
+      <div class="card">
+        <h2>Zadnje stanje</h2>
+        <div id="latestMetrics"></div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="card"><div class="row between"><h2>Teža</h2><span class="badge blue">trend</span></div><canvas id="weightChart"></canvas></div>
+      <div class="card"><div class="row between"><h2>Body fat</h2><span class="badge blue">trend</span></div><canvas id="bfChart"></canvas></div>
+      <div class="card"><div class="row between"><h2>Pas</h2><span class="badge blue">trend</span></div><canvas id="waistChart"></canvas></div>
+      <div class="card"><div class="row between"><h2>VO₂max</h2><span class="badge green">trend</span></div><canvas id="vo2Chart"></canvas></div>
+    </div>
+
+    <div class="grid two">
+      <div class="card"><h2>Osebni rekordi</h2><div id="prList"></div></div>
+      <div class="card"><h2>Zgodovina treningov</h2><div id="fullHistory"></div></div>
+    </div>
+  </section>
+
+  <section id="library" class="view">
+    <div class="card">
+      <div class="row between"><div><h2>Program treningov</h2><div class="small muted">Uredi serije, rep range, počitek ali dodaj svojo vajo.</div></div><button class="btn primary smallbtn" id="newTemplateBtn">+ trening</button></div>
+      <div id="templateList"></div>
+    </div>
+    <div class="card">
+      <h2>Garmin Connect helper</h2>
+      <p class="small muted">Ker Garmin ni neposredno povezan, lahko tukaj ustvariš čist tekst treninga za hitro ročno prepisovanje v Garmin Connect.</p>
+      <div class="form2"><div><label>Trening</label><select id="garminTemplate"></select></div><div style="display:flex;align-items:end"><button class="btn blue" id="copyGarmin" style="width:100%">Kopiraj trening</button></div></div>
+      <textarea id="garminText" style="margin-top:10px;min-height:180px" readonly></textarea>
+    </div>
+  </section>
+
+  <section id="settings" class="view">
+    <div class="grid two">
+      <div class="card">
+        <h2>Cilji</h2>
+        <div class="form2">
+          <div><label>Ciljna teža (kg)</label><input id="goalWeight" type="number" step=".1"></div>
+          <div><label>Ciljni body fat (%)</label><input id="goalBF" type="number" step=".1"></div>
+          <div><label>Ciljni VO₂max</label><input id="goalVO2" type="number" step=".1"></div>
+          <div><label>Protein (g/dan)</label><input id="goalProtein" type="number"></div>
+          <div><label>Kalorije (kcal/dan)</label><input id="goalCalories" type="number"></div>
+          <div><label>Maščobe (g/dan)</label><input id="goalFat" type="number"></div>
+        </div>
+        <button class="btn good" id="saveSettings" style="width:100%;margin-top:10px">Shrani nastavitve</button>
+      </div>
+      <div class="card">
+        <h2>Backup & podatki</h2>
+        <div class="list">
+          <button class="btn" id="exportJson">Izvozi celoten backup (.json)</button>
+          <button class="btn" id="exportCsv">Izvozi zgodovino setov (.csv)</button>
+          <label class="btn" style="text-align:center">Uvozi backup<input id="importJson" type="file" accept=".json,application/json" style="display:none"></label>
+          <button class="btn danger" id="wipeData">Izbriši vse podatke</button>
+        </div>
+        <p class="tiny muted">Podatki ostanejo na tej napravi/brskalniku. Backup shrani občasno.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Kako uporabljati za najboljši rezultat</h2>
+      <div class="list small">
+        <div class="listitem"><b>1.</b> Med treningom zapisuj kg, ponovitve in RIR. Ko zaključiš set, označi ✓ in zažene se rest timer.</div>
+        <div class="listitem"><b>2.</b> Vsakih 7–14 dni vnesi Garmin/Index metrike. Pas izmeri zjutraj na istem mestu.</div>
+        <div class="listitem"><b>3.</b> Napredek ocenjuj po kombinaciji: pas ↓, moč ↑, VO₂max ↑, telesna teža stabilna ali počasi ↑.</div>
+        <div class="listitem"><b>4.</b> Pri full-depth počepu ohrani globino, dokler je gib stabilen in brez bolečine.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="bottomnav">
+  <button data-view="dashboard" class="active">◉<br>Domov</button>
+  <button data-view="workout">＋<br>Trening</button>
+  <button data-view="plan">▦<br>Plan</button>
+  <button data-view="progress">↗<br>Trend</button>
+  <button data-view="library">≡<br>Program</button>
+  <button data-view="settings">⚙<br>Setup</button>
+</div>
+
+<div class="toast" id="toast">Shranjeno</div>
+
+<div class="modal" id="planModal">
+  <div class="sheet">
+    <div class="row between"><h2>Uredi tedenski plan</h2><button class="icon" id="closePlanModal">×</button></div>
+    <div id="planEditor"></div>
+    <button class="btn good" id="savePlan" style="width:100%;margin-top:12px">Shrani plan</button>
+  </div>
+</div>
+
+<div class="modal" id="templateModal">
+  <div class="sheet">
+    <div class="row between"><h2 id="templateModalTitle">Uredi trening</h2><button class="icon" id="closeTemplateModal">×</button></div>
+    <div><label>Ime treninga</label><input id="tplName"></div>
+    <div id="exerciseEditor" style="margin-top:12px"></div>
+    <div class="row wrap" style="margin-top:10px"><button class="btn" id="addExercise">+ vaja</button><button class="btn good" id="saveTemplate">Shrani trening</button></div>
+  </div>
+</div>
+
+<script src="./app1.js"></script>
+<script src="./app2.js"></script>
+<script src="./app3.js"></script>
+<script src="./app4.js"></script>
+</body>
+</html>
