@@ -151,6 +151,7 @@ Use `node dist/cli.mjs <command> --help` for command-specific flags. Replace `no
 | `awslabs.amazon-qbusiness-anonymous-mcp-server` | pip | Amazon Q Business anonymous app access | `QBUSINESS_APPLICATION_ID`, `AWS_PROFILE`, `AWS_REGION` |
 | `github.com/mark3labs/mcp-filesystem-server` | go | Cross-platform filesystem operations | None |
 | `ghcr.io/github/github-mcp-server` | docker | GitHub MCP server with wide toolset | `GITHUB_PERSONAL_ACCESS_TOKEN` |
+| [agent-qa](https://vostride.com) | npm | Web/mobile QA with persistent memidex memory, validated self-improvement and step/screenshot evidence | Node.js 24+, configured model. FSL-1.1-ALv2 (competing-use restrictions); free permitted local software, model/infrastructure costs separate. [MCP setup](https://vostride.com/docs/agent-qa/mcp.md) |
 
 Need another server? Add it to `pack.yaml`, then rerun `mcp-pack select`.
 

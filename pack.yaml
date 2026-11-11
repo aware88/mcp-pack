@@ -544,3 +544,20 @@ servers:
       - https://radar.mcp.cloudflare.com/sse
     env: []
     tags: [cloudflare, analytics, remote]
+
+  # agent-qa: web/mobile QA with persistent memidex memory, validated
+  # self-improvement and step/screenshot evidence. https://vostride.com
+  # Requires Node.js 24+ and a configured model; see
+  # https://vostride.com/docs/agent-qa/mcp.md
+  # FSL-1.1-ALv2 with competing-use restrictions. Free permitted local
+  # software; model and infrastructure costs are separate.
+  - id: "agent-qa"
+    runtime: npm
+    install: "npm install -g agent-qa"
+    command: "npx"
+    args:
+      - -y
+      - agent-qa
+      - mcp
+    env: []
+    tags: [qa, testing, web, mobile, memory]
